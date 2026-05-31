@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digitale Helfer für Schule und Unterricht</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow:   #FFD93D;
+      --orange:   #FF6B35;
+      --green:    #4CAF50;
+      --teal:     #06D6A0;
+      --blue:     #4CC9F0;
+      --pink:     #FF85A1;
+      --purple:   #9B5DE5;
+      --cream:    #FFFBF0;
+      --dark:     #1A1A2E;
+      --text:     #2D2D44;
+      --muted:    #6B7280;
+      --radius:   20px;
+      --shadow:   0 8px 32px rgba(0,0,0,0.10);
+      --shadow-lg:0 16px 48px rgba(0,0,0,0.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Hintergrund-Dekoration ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,217,61,0.18) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(76,201,240,0.15) 0%, transparent 35%),
+        radial-gradient(circle at 80% 80%, rgba(6,214,160,0.12) 0%, transparent 35%),
+        radial-gradient(circle at 20% 80%, rgba(255,107,53,0.10) 0%, transparent 30%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Skip Link (Barrierefreiheit) ── */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 16px;
+      background: var(--dark);
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      transition: top 0.2s;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 16px; }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 0 24px;
+    }
+
+    nav {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--dark);
+    }
+
+    .nav-brand-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--green);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .nav-brand-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2em;
+      line-height: 1.1;
+      color: var(--dark);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.9em;
+      padding: 8px 16px;
+      border-radius: 50px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus {
+      background: var(--yellow);
+      color: var(--dark);
+      outline: none;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      z-index: 10;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 60px 24px 48px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--dark);
+      font-weight: 800;
+      font-size: 0.85em;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.2em, 6vw, 3.4em);
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: var(--green);
+    }
+
+    .hero-desc {
+      font-size: clamp(1em, 2.5vw, 1.15em);
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+      font-weight: 600;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .stat-number {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2em;
+      color: var(--orange);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.82em;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Section ── */
+    section {
+      position: relative;
+      z-index: 10;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px 24px 48px;
+    }
+
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.8em;
+      color: var(--dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 3px;
+      background: linear-gradient(to right, var(--yellow), transparent);
+      border-radius: 2px;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 28px;
+      font-size: 0.95em;
+    }
+
+    /* ── App Cards ── */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .app-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s, box-shadow 0.25s;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .app-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .app-card:nth-child(1)::before { background: linear-gradient(90deg, var(--green), var(--teal)); }
+    .app-card:nth-child(2)::before { background: linear-gradient(90deg, var(--orange), var(--pink)); }
+    .app-card:nth-child(3)::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
+    .app-card:nth-child(4)::before { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+
+    .app-card:hover,
+    .app-card:focus-within {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      outline: none;
+    }
+
+    .app-card:focus {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    .app-card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .app-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      object-fit: cover;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .app-icon-svg {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .app-meta {
+      flex: 1;
+    }
+
+    .app-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2em;
+      color: var(--dark);
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .app-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 0.72em;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-green  { background: #E8F5E9; color: #2E7D32; }
+    .tag-orange { background: #FFF3E0; color: #E65100; }
+    .tag-blue   { background: #E3F2FD; color: #1565C0; }
+    .tag-purple { background: #F3E5F5; color: #6A1B9A; }
+
+    .app-desc {
+      font-size: 0.9em;
+      color: var(--muted);
+      line-height: 1.65;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .app-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .app-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.85em;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .app-features li::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 900;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .app-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 0.9em;
+      text-decoration: none;
+      transition: filter 0.2s, transform 0.2s;
+      align-self: flex-start;
+    }
+
+    .app-link:hover, .app-link:focus {
+      filter: brightness(1.08);
+      transform: scale(1.04);
+      outline: none;
+    }
+
+    .app-link:focus-visible {
+      outline: 3px solid var(--dark);
+      outline-offset: 3px;
+    }
+
+    .app-card:nth-child(1) .app-link { background: var(--green); color: white; }
+    .app-card:nth-child(2) .app-link { background: var(--orange); color: white; }
+    .app-card:nth-child(3) .app-link { background: var(--purple); color: white; }
+    .app-card:nth-child(4) .app-link { background: var(--yellow); color: var(--dark); }
+
+    /* ── Info-Banner ── */
+    .info-banner {
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      border-radius: var(--radius);
+      padding: 32px;
+      color: white;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .info-banner-icon {
+      font-size: 2.5em;
+      flex-shrink: 0;
+    }
+
+    .info-banner h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4em;
+      margin-bottom: 8px;
+    }
+
+    .info-banner p {
+      font-size: 0.92em;
+      font-weight: 600;
+      line-height: 1.65;
+      opacity: 0.92;
+    }
+
+    /* ── Kontakt ── */
+    .contact-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 36px;
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .contact-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--teal));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 2em;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .contact-info h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.3em;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .contact-info p {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.9em;
+      margin-bottom: 12px;
+    }
+
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--cream);
+      border: 2px solid var(--yellow);
+      border-radius: 50px;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 800;
+      font-size: 0.88em;
+      transition: background 0.2s, border-color 0.2s;
+      word-break: break-all;
+    }
+
+    .contact-email:hover, .contact-email:focus {
+      background: var(--yellow);
+      outline: none;
+    }
+
+    /* ── Impressum / Datenschutz ── */
+    .legal {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .legal h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1em;
+      color: var(--dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legal p, .legal li {
+      font-size: 0.88em;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 600;
+    }
+
+    .legal ul {
+      padding-left: 20px;
+      margin-top: 6px;
+    }
+
+    .legal + .legal {
+      margin-top: 16px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 32px 24px 48px;
+      color: var(--muted);
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+
+    footer a {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    /* ── Animationen ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero        { animation: fadeUp 0.6s ease both; }
+    .app-card    { animation: fadeUp 0.6s ease both; }
+    .app-card:nth-child(1) { animation-delay: 0.1s; }
+    .app-card:nth-child(2) { animation-delay: 0.2s; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .hero { padding: 40px 20px 32px; }
+      section { padding: 16px 16px 40px; }
+      .contact-card { flex-direction: column; text-align: center; }
+      .contact-avatar { margin: 0 auto; }
+      nav { justify-content: center; }
+    }
+
+    /* ── Fokus-Stile für Tastaturnavigation ── */
+    :focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
+
+  <!-- ── Navigation ── -->
+  <header role="banner">
+    <nav aria-label="Hauptnavigation">
+      <a href="#" class="nav-brand" aria-label="Startseite Digitale Helfer">
+        <div class="nav-brand-icon" aria-hidden="true">🎒</div>
+        <div class="nav-brand-text">Digitale Helfer<br><small style="font-family:Nunito;font-size:0.65em;font-weight:600;color:#6B7280;">für Schule und Unterricht</small></div>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#apps">Apps</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+        <li><a href="#rechtliches">Rechtliches</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ── Hero ── -->
+  <div class="hero" role="region" aria-labelledby="hero-heading">
+    <div class="hero-badge" aria-hidden="true">✨ Kostenlos & frei zugänglich</div>
+    <h1 id="hero-heading">
+      Digitale Helfer<br>
+      <span>für Schule & Unterricht</span>
+    </h1>
+    <p class="hero-desc">
+      Hier entstehen barrierefreie Web-Apps, die Schülerinnen und Schüler mit dem iPad im Unterricht als Hilfsmittel nutzen können. Alle Apps sind kostenlos und frei zugänglich.
+    </p>
+    <div class="hero-stats" role="list" aria-label="Kennzahlen">
+      <div class="stat" role="listitem">
+        <span class="stat-number" aria-label="2 Apps verfügbar">2</span>
+        <span class="stat-label">Apps</span>
+      </div>
+      <div class="stat" role="listitem">
+        <span class="stat-number" aria-label="kostenlos">0€</span>
+        <span class="stat-label">Kosten</span>
+      </div>
+      <div class="stat" role="listitem">
+        <span class="stat-number" aria-label="barrierefrei">♿</span>
+        <span class="stat-label">Barrierefrei</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Haupt-Inhalt ── -->
+  <main id="main">
+
+    <!-- ── Apps ── -->
+    <section id="apps" aria-labelledby="apps-heading">
+      <h2 class="section-title" id="apps-heading">🚀 Verfügbare Apps</h2>
+      <p class="section-subtitle">Alle Apps laufen direkt im Browser — keine Installation notwendig.</p>
+
+      <div class="apps-grid">
+
+        <!-- App 1: Buchstaben nachspuren -->
+        <article class="app-card" aria-labelledby="app1-title">
+          <div class="app-card-header">
+            <div class="app-icon-svg" style="background:#FDEBD0;" aria-hidden="true">
+              <svg viewBox="0 0 72 72" width="72" height="72">
+                <rect width="72" height="72" rx="18" fill="#FDEBD0"/>
+                <!-- Pencil -->
+                <rect x="31" y="12" width="10" height="32" rx="2" fill="#FFD93D"/>
+                <rect x="31" y="12" width="10" height="6" rx="2" fill="#C3B1E1"/>
+                <rect x="31" y="18" width="10" height="4" fill="#FF85A1"/>
+                <polygon points="31,44 41,44 36,54" fill="#D4A574"/>
+                <polygon points="34,50 38,50 36,54" fill="#8B6343"/>
+                <!-- Letter A -->
+                <text x="36" y="68" font-family="Arial Black" font-size="13" font-weight="900" fill="#C0392B" text-anchor="middle">A</text>
+              </svg>
+            </div>
+            <div class="app-meta">
+              <h3 class="app-title" id="app1-title">Buchstaben nachspuren</h3>
+              <div class="app-tags" aria-label="Kategorien">
+                <span class="tag tag-orange">Schreiben</span>
+                <span class="tag tag-purple">Grundschule</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="app-desc">
+            App zum Nachspuren aller Buchstaben und Zahlen. Die Reihenfolge orientiert sich an der Einführung der Buchstaben im <strong>Momel Lesekurs</strong>.
+          </p>
+
+          <ul class="app-features" aria-label="Funktionen">
+            <li>Alle Buchstaben & Zahlen zum Nachfahren</li>
+            <li>Nach 8 Eingaben: Konfettiregen mit Applaus 🎉</li>
+            <li>Auf "Prüfen" tippen zum Fortfahren</li>
+            <li>Jedes Ergebnis wird positiv bewertet</li>
+          </ul>
+
+          <a href="https://msb75.github.io/buchstaben_nachspuren/"
+             class="app-link"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Buchstaben nachspuren App öffnen (öffnet in neuem Tab)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            App öffnen
+          </a>
+        </article>
+
+        <!-- App 2: Einkaufsliste -->
+        <article class="app-card" aria-labelledby="app2-title">
+          <div class="app-card-header">
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAT9ElEQVR4nO3dyZJVR3rA8bxQTJpbQoJCtNSaSt0aW954ZyIcYW0c0Q9gbx3hd7AjvHP4JRzhZ7AXXvTC4bZXDjeNJgQCITRUURSixCSmmq4XagxiEFU37zknM7/fb9lNnXvqHMT3z7xTSgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANCm0dAnQJ7xid+Nhz4HIK7R3CFzpFJuXAUMeaBG4qBsbk5hDHugZaKgHG7EwAx8IDJBMBwXfgCGPsC9xEC/XOweGPgAWycIuuXidsjgB8gnBLrhok6ZoQ/QHTEwPS7klBj8AP0RAvlcwEwGP8BwhMDkXLgJGPoA5REDW+NibYHBD1A+IbA524Y+gVoY/gB18O/15qikh/AXCaBedgMezIV5AIMfoB1C4F4uyF0MfoB2CYHbvAbgDoY/QNv8O3+bEkr+QgBEFH03IPwOgOEPEFP0f/9DB0D0mw8QXeQ5EHL7I/INB+D+oj0lEG4HwPAH4H6izYdQARDt5gKwNZHmRIjtjkg3FIDpaP0pgeZ3AAx/ACbR+vxoOgBav3kAdKvlOdJsALR80wDoT6vzpMkAaPVmATCMFudKcwHQ4k0CYHitzZemAqC1mwNAWVqaM80EQEs3BYBytTJvmgiAVm4GAHVoYe5UHwAt3AQA6lP7/Kk6AGq/+ADUreY5VG0A1HzRAWhHrfOoygCo9WID0KYa51J1X3RQ40WGO/3P/J8NfQrF+tOD/zX0KUCWmr5AqKodAMMfgJLVNKeqCgAAYDqqCYCaqgqAuGqZV1UEQC0XEwBSqmNuFR8ANVxEALhb6fOr+AAAAKav6AAovZ4A4KeUPMeKDYCSLxoAbFap86zIACj1YgHAJEqca0UGAADQreICoMRKAoBcpc23ogKgtIsDANNU0pwrKgAAgH4UEwAlVREAdKWUeVdMAAAA/SkiAEqpIQDoQwlzr4gAAAD6NXgAlFBBANC3oeffoAEw9C8PAEMacg4OvgMAAPRvsACw+geA4eahHQAACEgAAEBAgwSA7X8AuG2IuWgHAAACGvX9gFb/hPdvp4c+g3L95qWhzwAGNZo71NtctgMAAAH1GgBW/wDwYH3OSTsAABCQAACAgHoLANv/APBwfc1LOwAAEFAvAWD1DwCb18fctAMAAAEJAAAISAAAQECdB4Dn/wFg67qen3YAACAgAQAAAXUaALb/AWByXc5ROwAAEJAAAICABAAABNRZAHj+HwDydTVP7QAAQEACAAACEgAAEJAAAICAOgkALwAEgOnpYq7aAQCAgAQAAAQkAAAgIAEAAAEJAAAISAAAQECjaR/QWwDhIW78/dBnUK7d/zj0GUDRRnOHpja37QAAQEACAAACEgAAEJAAAICABAAABCQAACAgAQAAAQkAAAhIAABAQAIAAAISAAAQkAAAgIAEAAAEJAAAICABAAABCQAACEgAAEBAAgAAAhIAABCQAACAgAQAAAQkAAAgIAEAAAEJAAAISAAAQEACAAACEgAAEJAAAICABAAABCQAACAgAQAAAQkAAAhIAABAQAIAAAISAAAQkAAAgIAEAAAEJAAAICABAAABCQAACEgAAEBAAgAAAhIAABCQAACAgAQAAAQkAAAgIAEAAAEJAAAISAAAQEACAAACEgAAEJAAAICABAAABCQAACAgAQAAAQkAAAhIAABAQAIAAAISAAAQkAAAgIAEAAAEJAAAICABAAABCQAACEgAAEBAAgAAAhIAABCQAACAgAQAAAQkAAAgIAEAAAEJAAAISAAAQEACAAACEgAAEJAAAICABAAABCQAACAgAQAAAQkAAAhIAABAQAIAAAISAAAQkAAAgIAEAAAEJAAAICABAAABCQAACEgAAEBAAgAAAhIAABCQAACAgAQAAAQkAAAgIAEAAAEJAAAISAAAQEACAAACEgAAEJAAAICABAAABCQAACAgAQAAAQkAAAhIAABAQAIAAAISAAAQkAAAgIAEAAAEJAAAICABAAABCQAACEgAAEBAAgAAAhIAABCQAACAgAQAAAQkAAAgIAEAAAEJAAAISAAAQEACAAACEgAAEJAAAICABAAABCQAACAgAQAAAQkAAAhIAABAQAIAAAISAAAQkAAAgIAEAAAEJAAAICABAAABCQAACEgAAEBAAgAAAhIAABCQAACAgAQAAAQkAAAgIAEAAAEJAAAISAAAQEACAAACEgAAEJAAAICABAAABCQAACAgAQAAAQkAAAhIAABAQAIAAAISAAAQkAAAgIAEAAAEJAAAICABAAABCQAACEgAAEBAAgAAAhIAABDQzNAnANEsnv+rlFJKv/3tbwc+k3K8//77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"
+              alt="Icon der Einkaufsliste App: Einkaufswagen mit Euro-Münze"
+              class="app-icon"
+              width="72"
+              height="72"
+            >
+            <div class="app-meta">
+              <h3 class="app-title" id="app2-title">Einkaufsliste</h3>
+              <div class="app-tags" aria-label="Kategorien">
+                <span class="tag tag-green">Alltag</span>
+                <span class="tag tag-blue">Kochunterricht</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="app-desc">
+            Digitale Einkaufsliste mit Artikeln aus dem <strong>EDEKA-Sortiment</strong> — speziell für Schulfrühstück und Kochunterricht zusammengestellt.
+          </p>
+
+          <ul class="app-features" aria-label="Funktionen">
+            <li>Artikel in übersichtlichen Kategorien</li>
+            <li>Vorlesefunktion für alle Artikel</li>
+            <li>Eigene Artikel per Sprache oder Text ergänzen</li>
+            <li>Liste in 3 Differenzierungsstufen als PDF senden</li>
+          </ul>
+
+          <a href="https://msb75.github.io/einkaufsliste/"
+             class="app-link"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Einkaufsliste App öffnen (öffnet in neuem Tab)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            App öffnen
+          </a>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ── Info-Banner ── -->
+    <section aria-label="Hinweis zur Nutzung" style="padding-top:0;">
+      <div class="info-banner" role="note">
+        <div class="info-banner-icon" aria-hidden="true">💡</div>
+        <div>
+          <h2>Weitere Apps in Entwicklung</h2>
+          <p>Diese Sammlung wächst kontinuierlich. Alle Apps sind speziell für den Einsatz auf dem iPad im Schulunterricht konzipiert und werden kostenlos zur Verfügung gestellt. Neue Apps werden hier laufend ergänzt.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Kontakt ── -->
+    <section id="kontakt" aria-labelledby="kontakt-heading">
+      <h2 class="section-title" id="kontakt-heading">✉️ Kontakt</h2>
+      <p class="section-subtitle">Fragen, Anregungen oder Wünsche für neue Apps?</p>
+
+      <div class="contact-card">
+        <div class="contact-avatar" aria-hidden="true">M</div>
+        <div class="contact-info">
+          <h3>Matthias Scheibelhut-Beck</h3>
+          <p>Entwickler der digitalen Helfer · Hephata Schulnetz</p>
+          <a href="mailto:matthias.scheibelhut-beck@hephata-schulnetz.de"
+             class="contact-email"
+             aria-label="E-Mail an Matthias Scheibelhut-Beck senden">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            matthias.scheibelhut-beck@hephata-schulnetz.de
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Rechtliches ── -->
+    <section id="rechtliches" aria-labelledby="rechtliches-heading">
+      <h2 class="section-title" id="rechtliches-heading">📋 Rechtliches</h2>
+      <p class="section-subtitle">Impressum, Datenschutz & Urheberrecht</p>
+
+      <div class="legal" role="region" aria-labelledby="impressum-heading">
+        <h3 id="impressum-heading">📌 Impressum</h3>
+        <p>Diese Website ist ein privates, nicht-kommerzielles Angebot und unterliegt daher <strong>keiner gesetzlichen Impressumspflicht</strong> gemäß § 5 TMG. Sie dient ausschließlich der kostenlosen Bereitstellung von Bildungsmaterialien.</p>
+        <p style="margin-top:8px;"><strong>Verantwortlich für den Inhalt:</strong><br>
+        Matthias Scheibelhut-Beck<br>
+        Kontakt: <a href="mailto:matthias.scheibelhut-beck@hephata-schulnetz.de" style="color:var(--green);font-weight:700;">matthias.scheibelhut-beck@hephata-schulnetz.de</a></p>
+        <p style="margin-top:8px;">Hosting: GitHub Pages (GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA)</p>
+      </div>
+
+
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer role="contentinfo">
+    <p>
+      🎒 <strong>Digitale Helfer für Schule und Unterricht</strong><br>
+      Erstellt von Matthias Scheibelhut-Beck &nbsp;·&nbsp;
+      Kostenlos & barrierefrei &nbsp;·&nbsp;
+      <a href="mailto:matthias.scheibelhut-beck@hephata-schulnetz.de">Kontakt</a>
+    </p>
+  </footer>
+
+</body>
+</html>
